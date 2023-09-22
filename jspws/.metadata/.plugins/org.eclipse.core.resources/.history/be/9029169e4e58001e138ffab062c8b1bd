@@ -1,0 +1,43 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+ <link rel="stylesheet" type="text/css" href="board_css.css">
+<title>board</title>
+</head>
+<body>
+	<h1>OO 게시판</h1>
+	<div class="board_box">
+		<div>
+			<div>
+				<select>
+					<option>제목</option>
+					<option>내용</option>
+					<option>작성자</option>
+				</select>
+				<input type="text" name="b_search" id="b_search">
+				<input type="button" value="검색하기" id="b_searchBtn">
+			</div>
+		</div>
+	
+		<div>
+            <ul class="table_ul">
+                <li class="tul_th"><span class="th_span">번호</span><span class="th_span">제목</span><span class="th_span">작성자</span><span class="th_span">조회수</span><span class="th_span">작성일</span></li>
+                <li><a href="write.jsp"><span class="tul_span">0</span><span class="tul_span">게시판 테스트글</span><span class="tul_span">관리자</span><span class="tul_span">1</span><span class="tul_span">2021-08-05</span></a></li>
+            </ul>
+        </div>
+	
+	
+		<div><a href="write.jsp"><input type="button" value="글쓰기" id="b_writeBtn"></a></div>
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+

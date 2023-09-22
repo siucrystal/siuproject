@@ -1,0 +1,75 @@
+<%@page import="member.MemberDTO"%>
+<%@page import="java.util.List"%>
+<%@page import="member.MemberDAO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+	request.setCharacterEncoding("utf-8");
+	MemberDAO dao = new MemberDAO();
+	List<MemberDTO> list = dao.getMemberList();
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>memberList.jsp</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script>
+function getJson(name){
+    $.ajax({
+      contentType: 'application/json',
+      type: 'GET',
+      url: 'searchProcJson.jsp',
+      dataType: 'text',
+      data: {name},
+      success: function(data) {
+        console.log("와 됬다!");
+        console.log("data_list : " + data['list']);
+        console.log("data : " + data);
+      },
+      error: function(xhr, status, error) {
+        console.log(xhr, status, error);
+      }
+    });
+}
+
+/* function innerHtml(data){
+	
+    let name_v = $("#name").val();   
+	for(item of data){
+		const {name} = item;
+		console.log("이 이름 : " + name_v);
+		if(name_v == name) {
+			console.log("내 짝을 찾았다~~");
+		}else {
+			console.log("하..");
+		}
+		
+    }	
+	alert("이것은 되나요?");
+	
+} */
+
+$(function() {
+	$('#nameSearch').click(function(){
+ 		getJson();		
+	})
+});
+  
+</script>
+</head>
+<body>
+<%@include file="topmenu.jsp" %>
+	<h2>회원이름검색</h2>
+	<form action="memberListData.jsp" method="GET">
+		<input type="text" name="name" id="name">
+		<input type="button" value="검색" id="nameSearch">
+		<h1>해당되는 회원의 아이디는 <span id="idResult"></span></h1>
+	</form>
+</body>
+</html>
+
+
+
+
+

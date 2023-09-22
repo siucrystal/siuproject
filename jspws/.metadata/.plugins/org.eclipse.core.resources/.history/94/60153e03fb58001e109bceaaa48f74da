@@ -1,0 +1,7 @@
+package mini_project;
+
+public interface MemberDAO {
+	MemberDTO getMember(MemberDTO dto);
+	MemberDTO getMemberLogin(MemberDTO dto);
+	int insert(MemberDTO dto);
+}

@@ -1,0 +1,37 @@
+<%@page import="member.MemberDAO"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+<%@page import="member.MemberDTO"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.Connection"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
+<%
+	request.setCharacterEncoding("utf-8");  // 이건 한글로 변형 시켜주는 거(이거 없으면 한글 깨짐)
+	String id = (String)session.getAttribute("id");
+%>
+
+<%
+	MemberDTO dto = new MemberDTO();
+	dto.setId(id);
+	MemberDAO dao = new MemberDAO();
+	int rs = dao.delete(dto);
+	
+%>
+<script>
+	<%if(rs == 1){
+		session.invalidate();
+		%>
+		alert('회원 탈퇴 했다.. 잘가라...');
+		location.href = "index.jsp";
+	<%}else {%>
+		alert('그래 탈퇴는 별로지?! 탈퇴 안해도 되~~ ㅎ');
+		history.back();
+	<%}%>
+</script>
+
+
+

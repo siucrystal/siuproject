@@ -1,0 +1,50 @@
+<%@page import="com.google.gson.JsonObject"%>
+<%@page import="member.MemberDAO"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+<%@page import="member.MemberDTO"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.Connection"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
+<%
+//이건 한글로 변형 시켜주는 거(이거 없으면 한글 깨짐)	
+	request.setCharacterEncoding("utf-8");  
+	String id = request.getParameter("id");
+	String pw = request.getParameter("pw");
+	String name = request.getParameter("name");
+	int age = Integer.parseInt(request.getParameter("age"));
+	/* String ageParameter = request.getParameter("age");
+	int age;
+	
+	if (ageParameter != null && !ageParameter.isEmpty()) {
+	    try {
+	        age = Integer.parseInt(ageParameter);
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    }
+	} */
+	MemberDTO dto = new MemberDTO(id,pw,name,age);
+	
+%>
+<%
+	MemberDAO dao = new MemberDAO();
+	int rs = dao.insert(dto);
+	if(dto != null) {
+		rs = "1";
+		alert("rs는 변경된다!");
+	}
+%>
+
+	
+<%
+JsonObject jsonObject = new JsonObject();
+jsonObject.addProperty("rs", rs);
+%>
+<%=jsonObject%>
+
+
+

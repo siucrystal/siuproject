@@ -1,0 +1,44 @@
+<%@page import="member.MemberDAO"%>
+<%@page import="member.MemberDTO"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.sql.Connection"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@include file="loginCheck.jsp" %>
+<%
+		String id = (String)session.getAttribute("id");
+		String pw = (String)session.getAttribute("pw");
+		MemberDTO dto = new MemberDTO();
+		dto.setId(id);
+		MemberDAO dao = new MemberDAO();
+		dto = dao.updatePrev(dto);
+	
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>update</title>
+</head>
+<body>
+<%@include file="topmenu.jsp" %>
+	<h2>회원 정보수정</h2>
+	<hr>
+	<form action="deleteProc.jsp" method="post">
+		<table border="1">
+			<tr> <th>ID</th> <td><%=session.getAttribute("id") %></td> </tr>
+			<tr> <th>PW</th> <td><input type="password" name="pw" id="pw"></td> </tr>
+			<tr> <td colspan="2"><input type="submit" value="Submit"></td> </tr>
+		</table>
+	</form>
+	<script>
+		if(dto.getPw().equals("#pw")) {
+			alert("맞다");
+		} else {
+			alert("틀리다");
+		}
+	</script>
+</body>
+</html>
