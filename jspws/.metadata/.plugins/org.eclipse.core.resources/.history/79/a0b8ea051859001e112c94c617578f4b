@@ -1,5 +1,0 @@
-package mini_project;
-
-public interface MemberService {
-	MemberDTO login(MemberDTO dto);
-}

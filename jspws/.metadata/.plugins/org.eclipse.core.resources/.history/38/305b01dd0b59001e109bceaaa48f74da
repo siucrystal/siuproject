@@ -1,6 +1,0 @@
-package mini_project;
-
-public interface MemberDAO {
-	MemberDTO getMember(MemberDTO dto);
-	int insert(MemberDTO dto);
-}
