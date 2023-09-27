@@ -1,0 +1,7 @@
+- 수정하기, 삭제하기 버튼 나오게
+- 수정페이지 제작 
+- 삭제 버튼을 위한 json, dao 제작
+
+- prev, next 버튼을 위한 json 등 제작
+- board.jsp에 검색하기 json, dao 제작
+- 조회수 json. dao 제작
