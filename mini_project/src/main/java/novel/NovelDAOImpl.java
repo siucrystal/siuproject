@@ -11,28 +11,65 @@ import control.JDBCUtil;
 
 public class NovelDAOImpl implements NovelDAO {
 	private Connection conn;
-	private PreparedStatement pstmt;
+	private PreparedStatement pstmt; 
 	private ResultSet rs;
 	String sql = "";
 	
-
-	/*
-	 * public BoardDTO getOne(BoardDTO dto){ BoardDTO retDto = null;
-	 * 
-	 * try { conn = JDBCUtil.getConnection(); sql =
-	 * "select num, nickname, title, category,context, postdate, visit_count from post WHERE category = '일반'"
-	 * ; pstmt = conn.prepareStatement(sql); pstmt.setString(1, dto.getId()); rs =
-	 * pstmt.executeQuery();
-	 * 
-	 * while (rs.next()) { String id = rs.getString("id"); int num =
-	 * rs.getInt("num"); String nickname = rs.getString("nickname"); String title =
-	 * rs.getString("title"); String category = rs.getString("category"); String
-	 * context = rs.getString("context"); String postdate =
-	 * rs.getString("postdate"); int visit_count = rs.getInt("visit_count"); retDto
-	 * = new BoardDTO(num, visit_count, context, id, nickname, title, category,
-	 * postdate); } } catch (SQLException e) { e.printStackTrace(); } finally {
-	 * JDBCUtil.close(pstmt, conn); } return retDto; }
-	 */
+	public int getMemberCount() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int retRs = 0;
+		
+		try {
+			conn = JDBCUtil.getConnection();
+			
+			String sql = "select count(*) as cnt from post where category = '소설'";
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				retRs = rs.getInt("cnt");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			JDBCUtil.close(rs, pstmt, conn);
+		}
+		return retRs;
+	} // End
+	public List<NovelDTO> getPostList(int pageNum, int listNum){
+		List<NovelDTO> list = new ArrayList<NovelDTO>();
+		int offSet = (pageNum -1) * listNum;
+		
+		conn = JDBCUtil.getConnection();
+		sql = "SELECT * FROM (SELECT ROWNUM AS rnum, post.* FROM (SELECT * FROM post WHERE POST.CATEGORY = '소설' ORDER BY num DESC) post WHERE ROWNUM <= ?) WHERE rnum >= ?";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, listNum);
+			pstmt.setInt(2, offSet);
+			
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				String id = rs.getString("id");
+				int num = rs.getInt("num");
+				String nickname = rs.getString("nickname");
+				String title = rs.getString("title");
+				String category = rs.getString("category");
+				String context = rs.getString("context");
+				String postdate = rs.getString("postdate");
+				int visit_count = rs.getInt("visit_count");
+				NovelDTO dto = new NovelDTO(num, visit_count, context, id, nickname, title, category, postdate);
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCUtil.close(rs, pstmt, conn);
+		}
+		return list;		
+	}
 	public int BoardInsert(NovelDTO dto) {
 		int rs = 0;
 		
@@ -77,6 +114,23 @@ public class NovelDAOImpl implements NovelDAO {
 		}
 		return rs;
 	}
+    // 게시판 조회수
+	public int boardCnt(NovelDTO dto) {   
+        int rs = 0;
+        conn = JDBCUtil.getConnection();
+        sql = "update post SET visit_count = (visit_count+1) where num = ?";
+        
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, dto.getNum());
+            rs = pstmt.executeUpdate();
+            System.out.print("DAO쪽의 rs : "+ rs);
+        } catch (Exception e) {
+            e.printStackTrace();
+          }
+        return rs;
+ 
+    }
 	public NovelDTO view(NovelDTO dto) {
 		ResultSet rs;
 		
@@ -162,7 +216,37 @@ public class NovelDAOImpl implements NovelDAO {
 		}
 		return dto;
 	}
-	public int prev(NovelDTO dto) {
+	public NovelDTO prev(NovelDTO dto) {
+		ResultSet rs;
+		
+		conn = JDBCUtil.getConnection();
+		sql = "select num, id, nickname,title,context,postdate,visit_count  From(select * from post where category = '소설' and num < ? order by num desc) where rownum <=1";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, dto.getNum());
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				String id = rs.getString("id");
+				String nickname = rs.getString("nickname");
+				String title = rs.getString("title");
+				String context = rs.getString("context");
+				String postdate = rs.getString("postdate");
+				int visit_count = rs.getInt("visit_count");
+				int num = rs.getInt("num");
+				
+				
+				dto = new NovelDTO(context, nickname, id, title, visit_count, postdate,num);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCUtil.close(pstmt, conn);
+		}
+		return dto;
+	}
+	public int next(NovelDTO dto) {
 		ResultSet rs;
 		int as = 0;
 		
@@ -176,28 +260,8 @@ public class NovelDAOImpl implements NovelDAO {
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
 				as = rs.getInt("num");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			JDBCUtil.close(pstmt, conn);
-		}
-		return as;
-	}
-	public int next(NovelDTO dto) {
-		ResultSet rs;
-		int as = 0;
-		
-		conn = JDBCUtil.getConnection();
-		sql = "select id, nickname,title, context, postdate,visit_count From(select * from post where category = '소설' and num < ? order by num desc) where rownum <=1";
-		
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, dto.getNum());
-			
-			rs = pstmt.executeQuery();
-			if(rs.next()) {
-				as = rs.getInt("num");
+				System.out.print("알에스 next의 rs : " + rs.getInt("num"));
+				System.out.print("에이에스 next의 as : " + as);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -53,7 +53,7 @@ $(document).ready(function() {
     </div>
 	<c:if test="${id == null}">
     <a href="../member/join.do">회원가입</a>
-    <a href="login.do">로그인</a>
+    <a href="../member/login.do">로그인</a>
     </c:if>
     <c:if test="${id != null}">
     <div class="outer-menu-item" style="text-align: center;">

@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
- <link rel="stylesheet" type="text/css" href="../css/write.css">
+ <link rel="stylesheet" type="text/css" href="./css/write.css">
  <script type="text/javascript" src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
  <script>
  function writeBoard() {
@@ -91,10 +91,7 @@
                                 <input type="button" value="목록 보기" id="listBtn">
                             </td>
                         </tr>
-                        <tr>
-                        	<td> <input type="button" value="&lt;" id="prevBtn"></td>
-                        	<td><input type="button" value="&gt;" id="nextBtn"></td>
-                        </tr>
+                        
                     </tbody>
                 </table>
             </div>

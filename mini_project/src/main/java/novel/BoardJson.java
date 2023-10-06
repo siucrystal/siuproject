@@ -55,23 +55,6 @@ public class BoardJson {
 				response.getWriter().write(jsonObject.toString());
 			}
 		}
-		else if (action.equals("/board.json")) {
-			List<BoardDTO> list = Bdao.getPostList();
-			
-			JsonArray jsonArray = new JsonArray();
-			for(BoardDTO dto: list){
-				JsonObject jsonObject = new JsonObject();
-				jsonObject.addProperty("id", dto.getId());
-				jsonObject.addProperty("num", dto.getNum());
-				jsonObject.addProperty("nickname", dto.getNickname());	
-				jsonObject.addProperty("title", dto.getTitle());	
-				jsonObject.addProperty("visit_count", dto.getVisitCount());	
-				jsonObject.addProperty("postdate", dto.getPostdate());	
-				jsonArray.add(jsonObject);
-			}
-			
-			response.setContentType("text/html; charset=UTF-8");
-		    response.getWriter().write(jsonArray.toString());			
-		} 
+		
 	}
 }
